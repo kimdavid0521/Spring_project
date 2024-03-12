@@ -3,11 +3,14 @@ package jpabook.jpashop.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jpabook.jpashop.domain.item.Item;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem {
     @Id @GeneratedValue
     @Column(name="order_item_id")
@@ -24,6 +27,9 @@ public class OrderItem {
     private int orderPrice; // 주문 가격
     private int count; // 주문 수량
 
+    //이 생성자를 막아주는 코드를 위에 @NoArgsConstructor(access = AccessLevel.PROTECTED) 어노테이션으로 줄일수있음
+//    protected OrderItem() {
+//    }
 
     //--생성 메서드 --//
     public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
