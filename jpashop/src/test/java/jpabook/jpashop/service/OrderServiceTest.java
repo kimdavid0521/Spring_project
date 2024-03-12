@@ -2,10 +2,7 @@ package jpabook.jpashop.service;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
-import jpabook.jpashop.domain.Address;
-import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderStatus;
+import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.item.Book;
 import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.domain.repository.OrderRepository;
@@ -89,5 +86,38 @@ class OrderServiceTest {
 
         assertThrows(NotEnoughStockException.class, ()
                 -> orderService.order(member.getId(), book.getId(), orderCount));
+    }
+
+    //주문 취소 테스트케이스
+    @Test
+    public void cancleOrder() throws Exception{
+        Member member = new Member();
+        member.setName("kim");
+        member.setAddress(new Address("서울", "강가", "12-213"));
+        em.persist(member);
+
+        Book book = new Book();
+        book.setName("시골 JPA");
+        book.setPrice(1000);
+        book.setStockQuantity(10); //재고 설정
+        em.persist(book);
+
+        int orderCount = 3;
+
+        //주문 후 주문 취소 메서드 사용하여 검증하기
+        Order getOrder = new Order();
+        Long orderId = orderService.order(member.getId(), book.getId(), orderCount);
+
+        orderService.cancleOrder(orderId);
+
+        //주문 취소 후 재고가 잘 복원이 됐는지 검증하기
+        Order getorder = orderRepository.findOne(orderId);
+
+        //주문 취소시 상태는 캔슬이 되어야함
+        assertEquals(OrderStatus.CANCLE, getorder.getStatus(),"주문시 상태는 취소가 되는걸 검증");
+
+        //주문 취소시 재고 원복 검증하기(기존 10개가 다 돌아왔는지)
+        assertEquals(10, book.getStockQuantity());
+
     }
 }
