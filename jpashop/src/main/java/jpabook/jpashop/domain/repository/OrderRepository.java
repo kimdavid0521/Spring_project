@@ -39,41 +39,41 @@ public class OrderRepository {
 //    select o: Order 엔티티를 선택
 //    from Order o: Order 엔티티를 가져옴. "o"는 Order 엔티티의 별칭.
 //    join o.member m: Order 엔티티의 member 속성과 조인, "m"은 member 엔티티의 별칭
-    public List<Order> findSearchByString(OrderSearch orderSearch) {
-
-        String jpql = 'select o from Order o join o.member m';
-        boolean isFirstCondition = true;
-        //주문 상태 검색
-        if (orderSearch.getOrderStatus() != null) {
-            if (isFirstCondition) {
-                jpql = jpql + " where";
-                isFirstCondition = false;
-            } else {
-                jpql = jpql + " and";
-            }
-            jpql = jpql + " o.status = :status";
-        }
-        //회원 이름 검색
-        if(StringUtils.hasText(orderSearch.getMemberName())) {
-            if (isFirstCondition) {
-                jpql = jpql + " where";
-                isFirstCondition = false;
-            }
-            else {
-                jpql = jpql + " and";
-            }
-            jpql = jpql + " m.name like :name";
-        }
-        TypedQuery<Order> query = em.createQuery(jpql, Order.class)
-                .setMaxResults(1000)
-        if(orderSearch.getOrderStatus() != null) {
-            query = query.setParameter("status", orderSearch.getOrderStatus());
-        }
-        if(StringUtils.hasText(orderSearch.getMemberName())) {
-            query = query.setParameter("name", orderSearch.getMemberName());
-        }
-        return query.getResultList();
-    }
+//    public List<Order> findSearchByString(OrderSearch orderSearch) {
+//
+//        String jpql = 'select o from Order o join o.member m';
+//        boolean isFirstCondition = true;
+//        //주문 상태 검색
+//        if (orderSearch.getOrderStatus() != null) {
+//            if (isFirstCondition) {
+//                jpql = jpql + " where";
+//                isFirstCondition = false;
+//            } else {
+//                jpql = jpql + " and";
+//            }
+//            jpql = jpql + " o.status = :status";
+//        }
+//        //회원 이름 검색
+//        if(StringUtils.hasText(orderSearch.getMemberName())) {
+//            if (isFirstCondition) {
+//                jpql = jpql + " where";
+//                isFirstCondition = false;
+//            }
+//            else {
+//                jpql = jpql + " and";
+//            }
+//            jpql = jpql + " m.name like :name";
+//        }
+//        TypedQuery<Order> query = em.createQuery(jpql, Order.class)
+//                .setMaxResults(1000)
+//        if(orderSearch.getOrderStatus() != null) {
+//            query = query.setParameter("status", orderSearch.getOrderStatus());
+//        }
+//        if(StringUtils.hasText(orderSearch.getMemberName())) {
+//            query = query.setParameter("name", orderSearch.getMemberName());
+//        }
+//        return query.getResultList();
+//    }
 
     //동적쿼리를 JPA Criteria로 해결하기
     public List<Order> findSearchByCriteria(OrderSearch orderSearch) {
