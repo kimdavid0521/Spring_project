@@ -37,18 +37,6 @@ public class MemberApiController {
         return new Result(collect.size(),collect);
     }
 
-    @Data
-    @AllArgsConstructor
-    static class Result<T> {
-        private int count;
-        private T data;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class MemberDTO {
-        private String name;
-    }
 
     //첫번째 버전의 api(회원 등록)
     @PostMapping("/api/v1/members")
@@ -106,4 +94,17 @@ public class MemberApiController {
         private String name;
     }
 
+    //회원조회 DTO
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private int count;
+        private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MemberDTO {
+        private String name;
+    }
 }
