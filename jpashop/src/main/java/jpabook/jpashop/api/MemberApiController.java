@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @RestController //이 두개를 합친게 responsebody@Controller @ResponseBody
 @RequiredArgsConstructor
@@ -17,13 +20,43 @@ public class MemberApiController {
 
     private final MemberService memberService;
 
+    @GetMapping("/api/v1/members")
+    public List<Member> searchMemberV1() {
+         return memberService.findMembers();
+    }
+
+    @GetMapping("/api/v2/members")
+    public Result memberV2() {
+        List<Member> findMembers = memberService.findMembers();
+
+        //리스트 멤버를 리스트멤버 DTO로 매핑시켜주기
+        List<MemberDTO> collect = findMembers.stream()
+                .map(m -> new MemberDTO(m.getName()))
+                .collect(Collectors.toList());
+
+        return new Result(collect.size(),collect);
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private int count;
+        private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MemberDTO {
+        private String name;
+    }
+
+    //첫번째 버전의 api(회원 등록)
     @PostMapping("/api/v1/members")
-    //첫번째 버전의 api
     public CreateMemberResponse saveMemberV1(@RequestBody @Valid Member member) { //requestbody는 json으로 온 데이터를 member에 매핑해줌
         Long id = memberService.join(member);
         return new CreateMemberResponse(id);
     }
-
+    //두번째 버전의 api(회원 등록 DTO 생성)
     @PostMapping("/api/v2/members")
     public CreateMemberResponse saveMemberV2(@RequestBody @Valid CreateMemberRequest request) { //파라미터를 객체가 아닌 CreateMemberRequest로 받아줌
         Member member = new Member();
@@ -72,4 +105,5 @@ public class MemberApiController {
     static class UpdateMemberRequest {
         private String name;
     }
+
 }
