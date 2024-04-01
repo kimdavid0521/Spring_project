@@ -60,4 +60,9 @@ public class MemberService {
         return memberRepository.findOne(memberId);
     }
 
+    @Transactional
+    public void update(Long id, String name) {
+        Member member = memberRepository.findOne(id); //영속상태라 트렌젝션 커밋이되면 JPA가 데이터 추적을해서 변경감지로 이름을 바꿔줌
+        member.setName(name);
+    }
 }
