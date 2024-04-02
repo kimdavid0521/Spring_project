@@ -20,11 +20,13 @@ public class MemberApiController {
 
     private final MemberService memberService;
 
+    //회원 조회 api 1버전
     @GetMapping("/api/v1/members")
     public List<Member> searchMemberV1() {
          return memberService.findMembers();
     }
 
+    //회원 조회 api 2버전
     @GetMapping("/api/v2/members")
     public Result memberV2() {
         List<Member> findMembers = memberService.findMembers();
